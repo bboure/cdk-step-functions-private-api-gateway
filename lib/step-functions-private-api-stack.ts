@@ -24,8 +24,10 @@ export class StepFunctionsPrivateApiStack extends Stack {
 
     const rgSecurityGroup = new SecurityGroup(this, 'ResourceGatewaySG', {
       vpc: vpc,
+      allowAllOutbound: false,
     });
-    rgSecurityGroup.addIngressRule(
+
+    rgSecurityGroup.addEgressRule(
       Peer.ipv4(vpc.vpcCidrBlock),
       Port.tcp(443),
       'Allow HTTPS traffic from Resource Gateway',

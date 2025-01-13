@@ -35,16 +35,6 @@ export class PrivateApi extends Construct {
 
     const { vpc } = props;
 
-    //Create Security group
-    const apiGatewayEndpointSG = new SecurityGroup(this, 'SG', {
-      vpc: vpc,
-    });
-
-    apiGatewayEndpointSG.addIngressRule(
-      Peer.ipv4(vpc.vpcCidrBlock),
-      Port.tcp(443),
-    );
-
     this.vpcEndpoint = new InterfaceVpcEndpoint(this, 'Endpoint', {
       service: InterfaceVpcEndpointAwsService.APIGATEWAY,
       vpc: vpc,
@@ -52,7 +42,6 @@ export class PrivateApi extends Construct {
         subnetType: SubnetType.PRIVATE_ISOLATED,
       }),
       privateDnsEnabled: true,
-      securityGroups: [apiGatewayEndpointSG],
     });
 
     const apiResourcePolicy = new PolicyDocument({
